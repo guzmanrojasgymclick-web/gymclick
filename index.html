@@ -113,8 +113,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
           <input id="telefono" name="telefono" type="tel" placeholder="+591..." autocomplete="tel">
         </div>
         <div class="f-full">
-          <label for="lugar">4. Lugar (Dirección o zona)</label>
-          <input id="lugar" name="lugar" type="text" placeholder="Ej: Av. Cañoto, zona central">
+          <label for="zona">4. Zona de interés</label>
+          <select id="zona" name="zona">
+            <option value="">Selecciona una zona</option>
+            <option value="Centro">Centro</option>
+            <option value="Norte">Norte</option>
+            <option value="Sur">Sur</option>
+            <option value="Este">Este</option>
+            <option value="Oeste">Oeste</option>
+          </select>
         </div>
         <div class="f-full">
           <label>5. Servicio o producto de interés</label>
@@ -172,7 +179,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 <section id="test"><div class="container"><div class="head"><div><h2>Test recomendador</h2><p>Te mostramos cómo presupuesto y zona influyen en el resultado.</p></div></div>
 <div class="test"><div class="box">
 <div class="q"><b>1. ¿Cuál es tu presupuesto mensual?</b><label class="option"><input type="radio" name="budget" value="100"> Hasta Bs. 100</label><label class="option"><input type="radio" name="budget" value="150"> Hasta Bs. 150</label><label class="option"><input type="radio" name="budget" value="200"> Hasta Bs. 200</label><label class="option"><input type="radio" name="budget" value="999999"> Más de Bs. 200</label></div>
-<div class="q"><b>2. ¿Qué zona te conviene?</b><select class="field" id="tzone"><option value="">Cualquiera</option><option>Centro</option><option>Norte</option><option>Sur</option></select></div>
+<div class="q"><b>2. ¿Qué zona te conviene?</b><select class="field" id="tzone"><option value="">Cualquiera</option><option>Centro</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
 <button class="btn primary" onclick="recommend()">Ver recomendación</button></div>
 <div class="box" id="rec"><h3>Tu resultado aparecerá aquí</h3><p class="muted">Cada coincidencia suma puntos. El presupuesto pesa 2 puntos y la zona 3.</p></div></div></div></section>
 </main>
@@ -181,6 +188,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 
 <script>
 const URL_EXEC = "https://script.google.com/macros/s/AKfycbzc-32o83qSo5-AexXi0lTaR1jRTTechn4CyR1aDHMhn5QEW04hQCBLGe1zVyPAaoDsCQ/exec";
+// Tu hoja publicada como CSV (fuente principal de los gimnasios)
+const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS7i-Orwm9ASFKv3I1Qr5gASRsEJumAqqgqQdHNqJGpSMW6RBaDLomsxQ8SBT6JRMNng0sUhOB82QpN/pub?gid=1807924285&single=true&output=csv";
+
+// Carpeta de fotos (GitHub Pages). Debe coincidir mayúsculas/minúsculas con los archivos.
+const BASE_FOTOS = 'https://guzmanrojasgymclick-web.github.io/gymclick/gimnasio/';
+const EXTS = ['jpg', 'png', 'jpeg', 'webp', 'JPG', 'PNG'];
 const FOTO_DEFECTO = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600';
 
 let gyms = [];
@@ -193,45 +206,144 @@ function esc(s) {
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// Limpia cada fila que llega de Google Sheets (acepta números, textos, vacíos)
+// "Dirección" -> "direccion", "precio bolivianos" -> "preciobolivianos"
+function clave(s) {
+    return String(s || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '');
+}
+
+// Busca un campo por varios nombres posibles de columna
+function campo(g, nombres) {
+    const m = {};
+    for (const k in g) m[clave(k)] = g[k];
+    for (const n of nombres) {
+        const v = m[clave(n)];
+        if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
+    }
+    return '';
+}
+
+// Lector simple de CSV (soporta comillas y comas dentro de textos)
+function parseCSV(t) {
+    const rows = []; let row = [], f = '', q = false;
+    for (let i = 0; i < t.length; i++) {
+        const c = t[i];
+        if (q) {
+            if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; }
+            else f += c;
+        } else if (c === '"') q = true;
+        else if (c === ',') { row.push(f); f = ''; }
+        else if (c === '\n' || c === '\r') {
+            if (c === '\r' && t[i + 1] === '\n') i++;
+            row.push(f); rows.push(row); row = []; f = '';
+        } else f += c;
+    }
+    if (f !== '' || row.length) { row.push(f); rows.push(row); }
+    const h = rows.shift() || [];
+    return rows.filter(r => r.some(x => x.trim())).map(r => {
+        const o = {};
+        h.forEach((k, i) => { if (k.trim()) o[k] = r[i] || ''; });
+        return o;
+    });
+}
+
+// Limpia enlaces de redes (quita redirecciones de Instagram, ignora textos que no son links)
+function limpiarRedes(r) {
+    r = String(r || '').trim();
+    if (!r) return { url: '', label: '' };
+    if (/^www\./i.test(r)) r = 'https://' + r;
+    if (!/^https?:\/\//i.test(r)) return { url: '', label: '' };
+    try {
+        let u = new URL(r);
+        if (u.hostname === 'l.instagram.com' && u.searchParams.get('u')) u = new URL(u.searchParams.get('u'));
+        const h = u.hostname.replace('www.', '');
+        const label = h.includes('facebook') ? 'Facebook' : h.includes('instagram') ? 'Instagram'
+            : h.includes('tiktok') ? 'TikTok' : 'Redes';
+        return { url: u.href, label };
+    } catch (e) { return { url: '', label: '' }; }
+}
+
 function normalizarGym(g, i) {
-    const precioTxt = String(g.precio === null || g.precio === undefined ? '' : g.precio)
-        .replace(/[^\d.,]/g, '').replace(',', '.');
-    let wa = String(g.whatsapp || '').replace(/\D/g, '');
+    const precioTxt = campo(g, ['precio', 'precio bolivianos', 'precio bs']).replace(/[^\d.,]/g, '').replace(',', '.');
+    let wa = campo(g, ['whatsapp', 'telefono']).replace(/\D/g, '');
     if (wa.length === 8) wa = '591' + wa; // agrega código de Bolivia si falta
+
+    // Dirección: puede ser texto o un link de Google Maps
+    let dir = campo(g, ['direccion']).replace(/[<>]/g, '').trim();
+    let mapa = '';
+    if (/^https?:\/\//i.test(dir)) { mapa = dir; dir = ''; }
+
+    const zonaRaw = campo(g, ['zona']);
+    const zona = zonaRaw ? zonaRaw.charAt(0).toUpperCase() + zonaRaw.slice(1).toLowerCase() : '';
+    const redes = limpiarRedes(campo(g, ['redes', 'redes sociales']));
+    const id = String(campo(g, ['id']) || (i + 1)).replace(/[^\w-]/g, '') || String(i + 1);
+
     return {
-        id: String(g.id || (i + 1)).replace(/[^\w-]/g, '') || String(i + 1),
-        nombre: String(g.nombre || 'Sin nombre').trim(),
-        zona: String(g.zona || '').trim(),
+        id,
+        nombre: campo(g, ['nombre']) || 'Sin nombre',
+        zona,
         precio: parseFloat(precioTxt) || 0,
-        foto: String(g.foto || '').trim(),
-        promo: String(g.promo || '').trim(),
-        direccion: String(g.direccion || '').trim(),
+        foto: campo(g, ['foto', 'imagen']),
+        promo: campo(g, ['promo', 'promocion']),
+        direccion: dir,
+        mapa,
         whatsapp: wa,
-        redes: String(g.redes || '').trim()
+        redes: redes.url,
+        redesLabel: redes.label
     };
+}
+
+// Devuelve la foto del gimnasio:
+//  - si la hoja trae un link completo, lo usa
+//  - si trae solo el nombre del archivo (ej. corpus.jpg), lo busca en la carpeta de GitHub
+//  - si está vacía, busca ID.jpg / ID.png ... (ej. 1.jpg, 2.png)
+function fotoInfo(g) {
+    if (/^https?:\/\//i.test(g.foto)) return { src: g.foto, auto: '' };
+    if (g.foto) return { src: BASE_FOTOS + encodeURIComponent(g.foto), auto: '' };
+    return { src: BASE_FOTOS + g.id + '.' + EXTS[0], auto: g.id };
+}
+
+// Si una foto no carga, prueba otras extensiones y al final usa la imagen por defecto
+function fotoError(img) {
+    const auto = img.dataset.auto;
+    const n = Number(img.dataset.n || 1);
+    if (auto && n < EXTS.length) {
+        img.dataset.n = n + 1;
+        img.src = BASE_FOTOS + auto + '.' + EXTS[n];
+        return;
+    }
+    img.onerror = null;
+    img.src = FOTO_DEFECTO;
 }
 
 async function cargarGimnasios() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="empty">Cargando gimnasios...</div>';
+    let filas = null, errores = [];
+
+    // 1) Hoja publicada en CSV (lee por nombre de columna)
     try {
-        const response = await fetch(URL_EXEC);
-        const textoRespuesta = await response.text();
-        let data;
+        const r = await fetch(URL_CSV);
+        if (!r.ok) throw new Error('CSV ' + r.status);
+        filas = parseCSV(await r.text());
+    } catch (e) { errores.push(e.message); }
+
+    // 2) Respaldo: Apps Script
+    if (!filas || !filas.length) {
         try {
-            data = JSON.parse(textoRespuesta);
-        } catch (e) {
-            throw new Error('Google no devolvió datos. Revisa que la implementación sea "Cualquier usuario" y que hayas publicado una NUEVA VERSIÓN.');
-        }
-        if (data.ok && Array.isArray(data.gimnasios)) {
-            gyms = data.gimnasios.map(normalizarGym);
-            render();
-        } else {
-            throw new Error(data.error || 'No se pudieron cargar los datos.');
-        }
-    } catch (error) {
-        grid.innerHTML = `<div class="empty">Error al cargar gimnasios: ${esc(error.message)}</div>`;
+            const r = await fetch(URL_EXEC);
+            const data = JSON.parse(await r.text());
+            if (data.ok && Array.isArray(data.gimnasios)) filas = data.gimnasios;
+            else throw new Error(data.error || 'Sin datos');
+        } catch (e) { errores.push(e.message); }
+    }
+
+    if (filas && filas.length) {
+        gyms = filas.map(normalizarGym).filter(g => g.nombre !== 'Sin nombre');
+        render();
+    } else {
+        grid.innerHTML = `<div class="empty">No se pudieron cargar los gimnasios. ${esc(errores.join(' | '))}</div>`;
     }
 }
 
@@ -297,23 +409,25 @@ function render() {
 
     grid.innerHTML = filtered.length ? filtered.map(g => {
         const linkWhatsApp = g.whatsapp
-            ? `<a href="https://wa.me/${g.whatsapp}?text=${encodeURIComponent('Hola, estoy interesado en una membresía con ' + g.nombre)}" target="_blank" rel="noopener" class="btn primary" style="background:#25d366; color:white;">💬 WhatsApp</a>`
+            ? `<a href="https://wa.me/${g.whatsapp}?text=${encodeURIComponent('Hola, estoy interesado en una membresía con ' + g.nombre)}" target="_blank" rel="noopener" class="btn primary" style="background:#25d366; color:white; text-align:center;">💬 WhatsApp</a>`
             : '';
-        const linkMapa = g.direccion
-            ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(g.nombre + ' ' + g.direccion + ' Santa Cruz')}" target="_blank" rel="noopener" class="btn ghost">📍 Ubicación</a>`
+        const urlMapa = g.mapa || (g.direccion
+            ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(g.nombre + ' ' + g.direccion + ' Santa Cruz')
+            : '');
+        const linkMapa = urlMapa
+            ? `<a href="${esc(urlMapa)}" target="_blank" rel="noopener" class="btn ghost">📍 Ubicación</a>`
             : '';
-        const urlRedes = g.redes ? (g.redes.startsWith('http') ? g.redes : 'https://' + g.redes) : '';
-        const linkRedes = urlRedes
-            ? `<a href="${esc(urlRedes)}" target="_blank" rel="noopener" class="btn ghost">🌐 Redes</a>`
+        const linkRedes = g.redes
+            ? `<a href="${esc(g.redes)}" target="_blank" rel="noopener" class="btn ghost">🌐 ${esc(g.redesLabel)}</a>`
             : '';
-        const foto = g.foto || FOTO_DEFECTO;
+        const f = fotoInfo(g);
 
         return `
         <div class="gym">
-            <div class="photo"><img src="${esc(foto)}" alt="${esc(g.nombre)}" loading="lazy" onerror="this.onerror=null;this.src='${FOTO_DEFECTO}'"></div>
+            <div class="photo"><img src="${esc(f.src)}" data-auto="${esc(f.auto)}" data-n="1" alt="${esc(g.nombre)}" loading="lazy" onerror="fotoError(this)"></div>
             <div class="body">
                 <h3>${esc(g.nombre)}</h3>
-                <p class="muted">📍 ${esc(g.zona)} ${g.direccion ? '· ' + esc(g.direccion) : ''}</p>
+                <p class="muted">📍 ${esc(g.zona)}${g.direccion ? ' · ' + esc(g.direccion) : ''}</p>
                 <div class="price">Bs. ${g.precio} <small>/mes</small></div>
                 <p class="muted" style="font-size:12px; color: var(--lime); font-weight:bold;">${esc(g.promo)}</p>
                 <div class="actions" style="flex-direction:column; gap:6px;">
@@ -352,7 +466,8 @@ function renderCompare() {
     el.innerHTML = `<table><tr><th>Característica</th>${items.map(g => `<th>${esc(g.nombre)}</th>`).join('')}</tr>
         <tr><td>Zona</td>${items.map(g => `<td>${esc(g.zona)}</td>`).join('')}</tr>
         <tr><td>Precio</td>${items.map(g => `<td>Bs. ${g.precio}</td>`).join('')}</tr>
-        <tr><td>Promo</td>${items.map(g => `<td>${esc(g.promo) || 'N/A'}</td>`).join('')}</tr>
+        <tr><td>Tipo / Promo</td>${items.map(g => `<td>${esc(g.promo) || 'N/A'}</td>`).join('')}</tr>
+        <tr><td>WhatsApp</td>${items.map(g => `<td>${g.whatsapp ? '+' + esc(g.whatsapp) : 'N/A'}</td>`).join('')}</tr>
     </table>`;
 }
 
@@ -375,7 +490,7 @@ function recommend() {
         if (g.precio <= budget) score += 2;
         if (!zone || g.zona.toLowerCase() === zone) score += 3;
         return { ...g, score };
-    }).sort((a, b) => b.score - a.score);
+    }).sort((a, b) => b.score - a.score || a.precio - b.precio);
 
     const best = scored[0];
     if (best) recDiv.innerHTML = `<h3>${esc(best.nombre)}</h3><p class="muted">📍 ${esc(best.zona)} · Bs. ${best.precio}/mes</p><p>Puntaje: ${best.score}/5</p>`;
