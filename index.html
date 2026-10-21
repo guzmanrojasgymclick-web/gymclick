@@ -6,6 +6,20 @@
 <title>GymClick | Gimnasios Santa Cruz</title>
 <meta name="description" content="GymClick: compara gimnasios de Santa Cruz de la Sierra.">
 <meta name="theme-color" content="#070a0c">
+<!-- Vista previa al compartir (WhatsApp, Facebook, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GymClick">
+<meta property="og:title" content="GymClick | Gimnasios en Santa Cruz de la Sierra">
+<meta property="og:description" content="Compara precios, promociones, ubicación y servicios de gimnasios antes de inscribirte.">
+<meta property="og:url" content="https://guzmanrojasgymclick-web.github.io/gymclick/">
+<meta property="og:image" content="https://guzmanrojasgymclick-web.github.io/gymclick/gimnasio/banner.png">
+<meta property="og:image:secure_url" content="https://guzmanrojasgymclick-web.github.io/gymclick/gimnasio/banner.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_BO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://guzmanrojasgymclick-web.github.io/gymclick/gimnasio/banner.png">
 <link rel="icon" href="data:,">
 <style>
 :root{--bg:#070a0c;--card:#11161a;--card2:#171e23;--text:#f7fafc;--muted:#aab4bd;--line:#29323a;--lime:#c7ff32;--lime2:#9bd500;--shadow:0 20px 60px #0008}
@@ -148,7 +162,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 <section id="explorar"><div class="container">
 <div class="head"><div><h2>Explorar gimnasios</h2><p>Filtra por presupuesto y zona.</p></div><button class="btn ghost" onclick="clearFilters()">Limpiar filtros</button></div>
 <div class="filters">
-<select class="field" id="zone" onchange="render()"><option value="">Todas las zonas</option><option>Centro</option><option>Norte</option><option>Sur</option></select>
+<select class="field" id="zone" onchange="render()"><option value="">Todas las zonas</option><option>Centro</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option></select>
 <label class="filter-label" for="min">Precio mínimo (Bs.)<input class="field" id="min" type="number" min="0" placeholder="Ej. 100" oninput="render()"></label>
 <label class="filter-label" for="max">Precio máximo (Bs.)<input class="field" id="max" type="number" min="0" placeholder="Ej. 200" oninput="render()"></label>
 </div><div class="grid" id="grid"><div class="empty">Cargando gimnasios...</div></div></div></section>
