@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GymClick | Gimnasios Santa Cruz</title>
-<meta name="description" content="GymClick: compara gimnasios de Santa Cruz de la Sierra por precio, ubicación, equipamiento y servicios.">
+<meta name="description" content="GymClick: compara gimnasios de Santa Cruz de la Sierra.">
 <meta name="theme-color" content="#070a0c">
 <link rel="icon" href="data:,">
 <style>
@@ -14,14 +14,13 @@
 .hero{min-height:650px;display:flex;align-items:center;position:relative;overflow:hidden;background:linear-gradient(90deg,#050807f2 0%,#06090ad9 32%,#06090a78 62%,#06090a35 100%),url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=85') center/cover}
 .hero:after{content:"";position:absolute;inset:auto -10% -140px;height:260px;background:linear-gradient(transparent,var(--bg));pointer-events:none}.hero-content{position:relative;z-index:2;max-width:760px;padding:80px 0}.eyebrow{color:var(--lime);font-weight:1000;text-transform:uppercase;letter-spacing:2px;font-size:12px}.hero h1{font-size:clamp(48px,7vw,86px);line-height:.94;margin:14px 0 20px;letter-spacing:-3px}.hero h1 span{color:var(--lime)}.hero p{font-size:19px;line-height:1.6;color:#d4dbe1;max-width:650px}.search{margin-top:28px;background:#0b0f12dd;border:1px solid #ffffff22;border-radius:18px;padding:10px;display:flex;gap:9px;box-shadow:var(--shadow)}.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;padding:10px 12px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.stat{padding:14px 16px;background:#0c1115cc;border:1px solid #ffffff18;border-radius:14px}.stat strong{display:block;font-size:21px}.stat small{color:var(--muted)}
-section{padding:62px 0}.head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:25px}.head h2{font-size:34px;margin:0}.head p{margin:7px 0 0;color:var(--muted)}.promo{border:1px solid #3c4b27;background:linear-gradient(100deg,#1a2410,#10151a);border-radius:18px;padding:19px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:45px}.promo strong{color:var(--lime);font-size:19px}.promo span{color:var(--muted);font-size:13px}
-.filters{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:22px}.filter-label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:12px;font-weight:800}.field{background:var(--card);color:white;border:1px solid var(--line);border-radius:11px;padding:12px;outline:none;width:100%}.field:focus{border-color:#71832c}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.gym{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.2s}.gym:hover{transform:translateY(-4px);border-color:#56652f;box-shadow:0 14px 40px #0007}.photo{height:205px;position:relative;background:#1a2025 center/cover no-repeat;overflow:hidden}.photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .35s}.gym:hover .photo img{transform:scale(1.04)}.tag{position:absolute;top:12px;left:12px;background:var(--lime);color:#10140a;border-radius:8px;padding:6px 9px;font-weight:1000;font-size:11px}.body{padding:17px}.body h3{margin:0 0 5px;font-size:21px}.muted{color:var(--muted);font-size:13px}.price{font-size:27px;font-weight:1000;margin:12px 0}.price small{font-size:12px;color:var(--muted);font-weight:500}.actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.actions .btn{flex:1;padding:10px;font-size:12px;min-width:105px}
+section{padding:62px 0}.head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:25px}.head h2{font-size:34px;margin:0}.head p{margin:7px 0 0;color:var(--muted)}.filters{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:22px}.filter-label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:12px;font-weight:800}.field{background:var(--card);color:white;border:1px solid var(--line);border-radius:11px;padding:12px;outline:none;width:100%}.field:focus{border-color:#71832c}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.gym{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.2s}.gym:hover{transform:translateY(-4px);border-color:#56652f;box-shadow:0 14px 40px #0007}.photo{height:205px;position:relative;background:#1a2025 center/cover no-repeat;overflow:hidden}.photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .35s}.gym:hover .photo img{transform:scale(1.04)}.body{padding:17px}.body h3{margin:0 0 5px;font-size:21px}.muted{color:var(--muted);font-size:13px}.price{font-size:27px;font-weight:1000;margin:12px 0}.price small{font-size:12px;color:var(--muted);font-weight:500}.actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.actions .btn{flex:1;padding:10px;font-size:12px;min-width:105px}
 .compare{overflow:auto;border:1px solid var(--line);border-radius:18px;background:var(--card)}table{border-collapse:collapse;width:100%;min-width:760px}th,td{padding:14px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--lime)}td:first-child{color:var(--muted);font-weight:800}.empty{grid-column:1/-1;padding:45px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
 .test{display:grid;grid-template-columns:1fr 1fr;gap:18px}.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}.q{margin-bottom:20px}.q b{display:block;margin-bottom:8px}.option{display:block;padding:10px;background:var(--card2);border-radius:9px;margin:6px 0;color:#dbe1e6}.option input{accent-color:var(--lime)}
 footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:12px}
 
-/* ===== Formulario de registro (lateral) ===== */
+/* Formulario lateral */
 #formScreen{position:fixed;inset:0;z-index:90;display:none!important;align-items:stretch;justify-content:flex-end;padding:0;background:#0009;}
 #formScreen.open{display:flex!important}
 #formScreen .f-card{width:min(560px,96vw);height:100vh;max-height:100vh;overflow:auto;border-radius:24px 0 0 24px;padding:28px;}
@@ -71,12 +70,11 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 #formScreen .f-notice{margin-top:18px;padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.5}
 @media(max-width:720px){#formScreen .f-grid{grid-template-columns:1fr}#formScreen .f-full{grid-column:auto}#formScreen .f-checks{grid-template-columns:1fr}#formScreen .f-card{padding:22px}}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.links{display:none}.test{grid-template-columns:1fr}}
-@media(max-width:580px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.search{flex-direction:column}.stats{grid-template-columns:1fr}.promo{flex-direction:column;align-items:flex-start}}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.search{flex-direction:column}.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ========== FORMULARIO LATERAL ========== -->
 <div id="formScreen">
   <div class="f-card">
     <button class="form-close" type="button" onclick="closeForm()" aria-label="Cerrar formulario">×</button>
@@ -84,12 +82,11 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
     <h1>¡REGÍSTRATE AQUÍ!</h1>
     <p class="f-intro">Este formulario es opcional. Puedes navegar y comparar gimnasios sin completarlo. Si quieres dejarnos tus datos, puedes hacerlo aquí.</p>
     <div class="form-side-note">Puedes cerrar este panel en cualquier momento y seguir explorando GymClick.</div>
-    <div class="f-progress"><span></span></div>
-
+    
     <form id="gymForm">
       <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
       <div class="f-grid">
-        <div>
+        <div class="f-full">
           <label for="nombre">1. Nombre completo</label>
           <input id="nombre" name="nombre" type="text" autocomplete="name" required>
         </div>
@@ -101,33 +98,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
           <label for="telefono">3. Número de teléfono</label>
           <input id="telefono" name="telefono" type="tel" placeholder="+591..." autocomplete="tel">
         </div>
-        <div>
-          <label for="ciudad">5. Ciudad donde vive</label>
-          <select id="ciudad" name="ciudad">
-            <option value="">Selecciona una ciudad</option>
-            <option>Santa Cruz de la Sierra</option><option>La Paz</option><option>Cochabamba</option>
-            <option>Sucre</option><option>Tarija</option><option>Oruro</option><option>Potosí</option>
-            <option>Trinidad</option><option>Otra ciudad de Bolivia</option>
-          </select>
+        <div class="f-full">
+          <label for="lugar">4. Lugar (Dirección o zona)</label>
+          <input id="lugar" name="lugar" type="text" placeholder="Ej: Av. Cañoto, zona central">
         </div>
         <div class="f-full">
-          <label for="direccion">4. Dirección (ciudad, zona, calle, número)</label>
-          <textarea id="direccion" name="lugar" placeholder="Ej: Av. Cañoto, zona central"></textarea>
-        </div>
-        <div>
-          <label for="nacimiento">6. Fecha de nacimiento</label>
-          <input id="nacimiento" name="nacimiento" type="date">
-        </div>
-        <div>
-          <label>8. Cómo prefiere que lo contactemos</label>
-          <div class="f-checks" style="grid-template-columns:1fr 1fr 1fr">
-            <label class="f-radio"><input type="radio" name="contacto" value="Correo">Correo</label>
-            <label class="f-radio"><input type="radio" name="contacto" value="Teléfono">Teléfono</label>
-            <label class="f-radio"><input type="radio" name="contacto" value="WhatsApp">WhatsApp</label>
-          </div>
-        </div>
-        <div class="f-full">
-          <label>7. Servicio o producto de interés</label>
+          <label>5. Servicio o producto de interés</label>
           <div class="f-checks">
             <label class="f-check"><input type="checkbox" name="tipo" value="Membresía de gimnasio">Membresía de gimnasio</label>
             <label class="f-check"><input type="checkbox" name="tipo" value="Entrenamiento personalizado">Entrenamiento personalizado</label>
@@ -136,27 +112,26 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
           </div>
         </div>
         <div class="f-full">
-          <label for="comentario">9. Comentario o consulta</label>
-          <textarea id="comentario" name="mensaje" placeholder="Escribe aquí tu consulta (opcional)"></textarea>
-        </div>
-        <div class="f-full">
-          <label for="fecha">10. Fecha para tu visita o clase de prueba</label>
+          <label for="fecha">6. Fecha para tu visita o clase de prueba</label>
           <input id="fecha" name="fecha" type="date">
         </div>
         <div class="f-full">
-          <label class="f-check"><input id="terminos" name="terminos" type="checkbox" required aria-describedby="termsHint"><span>11. Acepto los términos y la política de privacidad (obligatorio).</span></label><div class="f-hint f-full" id="termsHint">Debes marcar esta casilla para enviar el formulario.</div>
+          <label for="mensaje">7. Comentario o consulta</label>
+          <textarea id="mensaje" name="mensaje" placeholder="Escribe aquí tu consulta (opcional)"></textarea>
+        </div>
+        <div class="f-full">
+          <label class="f-check"><input id="terminos" name="terminos" type="checkbox" required><span>8. Acepto los términos y la política de privacidad (obligatorio).</span></label>
         </div>
       </div>
       <div class="f-actions">
         <button class="f-btn f-secondary" type="reset">Limpiar</button>
         <button id="submitBtn" class="f-btn f-primary" type="submit">Enviar registro</button>
       </div>
-      <div id="message" class="f-notice" role="status" aria-live="polite">Todos los campos de datos son opcionales; aceptar los términos es obligatorio.</div>
+      <div id="message" class="f-notice" role="status" aria-live="polite">Todos los campos son opcionales; aceptar los términos es obligatorio.</div>
     </form>
   </div>
 </div>
 
-<!-- ========== SITIO PRINCIPAL ========== -->
 <button class="form-side-btn" type="button" onclick="showForm()">📝 REGÍSTRATE AQUÍ</button>
 
 <div id="siteWrap">
@@ -167,7 +142,6 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 <h1>Tu próximo gym.<br><span>Una decisión más inteligente.</span></h1>
 <p>Compara precios, promociones, ubicación, equipamiento y servicios antes de inscribirte.</p>
 <div class="search"><input id="search" placeholder="Busca por gimnasio o zona..." oninput="render()"><button class="btn primary" onclick="go('explorar')">Buscar gimnasios</button></div>
-<div class="stats"><div class="stat"><strong>Hasta 3</strong><small>gimnasios para comparar</small></div><div class="stat"><strong>Precio anual</strong><small>costo efectivo calculado</small></div><div class="stat"><strong>WhatsApp</strong><small>contacto directo</small></div></div>
 </div></section>
 
 <main>
@@ -188,20 +162,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 <button class="btn primary" onclick="recommend()">Ver recomendación</button></div>
 <div class="box" id="rec"><h3>Tu resultado aparecerá aquí</h3><p class="muted">Cada coincidencia suma puntos. El presupuesto pesa 2 puntos y la zona 3.</p></div></div></div></section>
 </main>
-<footer id="privacidad"><div class="container">© 2026 GymClick Santa Cruz · Plataforma académica. Precios y promociones: consultar al gimnasio.</div></footer>
+<footer id="privacidad"><div class="container">© 2026 GymClick Santa Cruz · Plataforma académica.</div></footer>
 </div>
 
 <script>
-// ============================================
-// ⚠️ CONFIGURACIÓN CRÍTICA ⚠️
-// ============================================
 const URL_EXEC = "https://script.google.com/macros/s/AKfycbw3u_PkwkwwA1Z2nj3SpXlYX6GiNBkJBCXYF3kh8n8L3vqkdjRU3VrdpR12m-G9U1qEWA/exec";
 
 let gyms = []; 
 
-// ============================================
-// CARGAR GIMNASIOS DESDE GOOGLE SHEETS
-// ============================================
 async function cargarGimnasios() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="empty">Cargando gimnasios...</div>';
@@ -215,21 +183,16 @@ async function cargarGimnasios() {
             throw new Error(data.error || 'No se pudieron cargar los datos.');
         }
     } catch (error) {
-        grid.innerHTML = `<div class="empty">No se pudieron cargar los gimnasios. Error: ${error.message}</div>`;
-        console.error('Error al cargar gimnasios:', error);
+        grid.innerHTML = `<div class="empty">Error al cargar gimnasios: ${error.message}</div>`;
     }
 }
 
-// ============================================
-// FORMULARIO: Envío con fetch y manejo de estados
-// ============================================
 const gymForm = document.getElementById('gymForm');
 const submitBtn = document.getElementById('submitBtn');
 const messageDiv = document.getElementById('message');
 
 gymForm.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-
     const email = gymForm.email.value.trim();
     if (!/\S+@\S+\.\S+/.test(email)) {
         messageDiv.textContent = 'Por favor, revisa tu correo electrónico.';
@@ -251,37 +214,25 @@ gymForm.addEventListener('submit', async (ev) => {
             method: 'POST',
             body: new URLSearchParams(formData)
         });
-
         const data = await response.json();
+        if (!data.ok) throw new Error(data.error || 'Error del servidor');
 
-        if (!data.ok) {
-            throw new Error(data.error || 'Error del servidor');
-        }
-
-        messageDiv.textContent = '¡Listo! Tu registro fue enviado y recibirás un correo de confirmación.';
+        messageDiv.textContent = '¡Listo! Tu registro fue enviado. Revisa tu correo.';
         messageDiv.className = 'f-notice f-success';
         gymForm.reset();
-
     } catch (error) {
-        messageDiv.textContent = 'No se pudo enviar el formulario. Intenta de nuevo.';
+        messageDiv.textContent = 'No se pudo enviar. Intenta de nuevo.';
         messageDiv.className = 'f-notice f-error';
-        console.error('Error:', error);
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Enviar registro';
     }
 });
 
-// ============================================
-// FUNCIONES DE UI
-// ============================================
 function showForm() { document.getElementById('formScreen').classList.add('open'); }
 function closeForm() { document.getElementById('formScreen').classList.remove('open'); }
 function go(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-// ============================================
-// RENDERIZADO DE GIMNASIOS (CON MAPS Y WHATSAPP)
-// ============================================
 let compare = [];
 
 function render() {
@@ -299,7 +250,6 @@ function render() {
     });
 
     grid.innerHTML = filtered.length ? filtered.map(g => {
-        // Enlaces dinámicos
         const linkWhatsApp = g.whatsapp ? `<a href="https://wa.me/${g.whatsapp.replace(/\D/g, '')}?text=Hola,%20estoy%20interesado%20en%20una%20membresía%20con%20${encodeURIComponent(g.nombre)}" target="_blank" class="btn primary" style="background:#25d366; color:white;">💬 WhatsApp</a>` : '';
         const linkMapa = g.direccion ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(g.nombre + ' ' + g.direccion + ' Santa Cruz')}" target="_blank" class="btn ghost">📍 Ubicación</a>` : '';
         const linkRedes = g.redes ? `<a href="${g.redes.startsWith('http') ? g.redes : 'https://' + g.redes}" target="_blank" class="btn ghost">🌐 Redes</a>` : '';
@@ -322,7 +272,7 @@ function render() {
                 </div>
             </div>
         </div>
-    `}).join('') : '<div class="empty">No se encontraron gimnasios con esos filtros.</div>';
+    `}).join('') : '<div class="empty">No se encontraron gimnasios.</div>';
     
     renderCompare();
 }
@@ -333,7 +283,7 @@ function toggleCompare(id) {
     } else if (compare.length < 3) {
         compare.push(id);
     } else {
-        alert('Máximo 3 gimnasios para comparar.');
+        alert('Máximo 3 gimnasios.');
     }
     render();
 }
@@ -364,11 +314,7 @@ function recommend() {
     const budget = document.querySelector('input[name="budget"]:checked')?.value || 999999;
     const zone = document.getElementById('tzone').value;
     const recDiv = document.getElementById('rec');
-    
-    if (gyms.length === 0) {
-        recDiv.innerHTML = '<p class="muted">No hay gimnasios cargados aún.</p>';
-        return;
-    }
+    if (gyms.length === 0) { recDiv.innerHTML = '<p class="muted">No hay gimnasios cargados.</p>'; return; }
 
     const scored = gyms.map(g => {
         let score = 0;
@@ -378,12 +324,9 @@ function recommend() {
     }).sort((a, b) => b.score - a.score);
 
     const best = scored[0];
-    if (best) {
-        recDiv.innerHTML = `<h3>${best.nombre}</h3><p class="muted">📍 ${best.zona} · Bs. ${best.precio}/mes</p><p>Puntaje: ${best.score}/5</p>`;
-    }
+    if (best) recDiv.innerHTML = `<h3>${best.nombre}</h3><p class="muted">📍 ${best.zona} · Bs. ${best.precio}/mes</p><p>Puntaje: ${best.score}/5</p>`;
 }
 
-// Inicializar
 cargarGimnasios();
 </script>
 </body>
