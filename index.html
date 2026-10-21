@@ -6,6 +6,7 @@
 <title>GymClick | Gimnasios Santa Cruz</title>
 <meta name="description" content="GymClick: compara gimnasios de Santa Cruz de la Sierra por precio, ubicación, equipamiento y servicios.">
 <meta name="theme-color" content="#070a0c">
+<link rel="icon" href="data:,">
 <style>
 :root{--bg:#070a0c;--card:#11161a;--card2:#171e23;--text:#f7fafc;--muted:#aab4bd;--line:#29323a;--lime:#c7ff32;--lime2:#9bd500;--shadow:0 20px 60px #0008}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
@@ -196,7 +197,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 // ============================================
 const URL_EXEC = "https://script.google.com/macros/s/AKfycbw3u_PkwkwwA1Z2nj3SpXlYX6GiNBkJBCXYF3kh8n8L3vqkdjRU3VrdpR12m-G9U1qEWA/exec";
 
-let gyms = []; // Se llena desde la hoja de Google
+let gyms = []; 
 
 // ============================================
 // CARGAR GIMNASIOS DESDE GOOGLE SHEETS
@@ -279,7 +280,7 @@ function closeForm() { document.getElementById('formScreen').classList.remove('o
 function go(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
 // ============================================
-// RENDERIZADO DE GIMNASIOS
+// RENDERIZADO DE GIMNASIOS (CON MAPS Y WHATSAPP)
 // ============================================
 let compare = [];
 
@@ -297,19 +298,31 @@ function render() {
         return matchSearch && matchZone && matchPrice;
     });
 
-    grid.innerHTML = filtered.length ? filtered.map(g => `
+    grid.innerHTML = filtered.length ? filtered.map(g => {
+        // Enlaces dinámicos
+        const linkWhatsApp = g.whatsapp ? `<a href="https://wa.me/${g.whatsapp.replace(/\D/g, '')}?text=Hola,%20estoy%20interesado%20en%20una%20membresía%20con%20${encodeURIComponent(g.nombre)}" target="_blank" class="btn primary" style="background:#25d366; color:white;">💬 WhatsApp</a>` : '';
+        const linkMapa = g.direccion ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(g.nombre + ' ' + g.direccion + ' Santa Cruz')}" target="_blank" class="btn ghost">📍 Ubicación</a>` : '';
+        const linkRedes = g.redes ? `<a href="${g.redes.startsWith('http') ? g.redes : 'https://' + g.redes}" target="_blank" class="btn ghost">🌐 Redes</a>` : '';
+
+        return `
         <div class="gym">
             <div class="photo"><img src="${g.foto || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600'}" alt="${g.nombre}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600'"></div>
             <div class="body">
                 <h3>${g.nombre}</h3>
-                <p class="muted">📍 ${g.zona}</p>
+                <p class="muted">📍 ${g.zona} ${g.direccion ? '· ' + g.direccion : ''}</p>
                 <div class="price">Bs. ${g.precio} <small>/mes</small></div>
-                <div class="actions">
-                    <button class="btn ghost" onclick="toggleCompare(${g.id})">${compare.includes(g.id) ? 'Quitar' : 'Comparar'}</button>
+                <p class="muted" style="font-size:12px; color: var(--lime); font-weight:bold;">${g.promo || ''}</p>
+                <div class="actions" style="flex-direction:column; gap:6px;">
+                    <div style="display:flex; gap:6px;">
+                        ${linkMapa}
+                        ${linkRedes}
+                    </div>
+                    ${linkWhatsApp}
+                    <button class="btn ghost" onclick="toggleCompare(${g.id})">${compare.includes(g.id) ? '❌ Quitar' : '⚖️ Comparar'}</button>
                 </div>
             </div>
         </div>
-    `).join('') : '<div class="empty">No se encontraron gimnasios con esos filtros.</div>';
+    `}).join('') : '<div class="empty">No se encontraron gimnasios con esos filtros.</div>';
     
     renderCompare();
 }
@@ -335,6 +348,7 @@ function renderCompare() {
     el.innerHTML = `<table><tr><th>Característica</th>${items.map(g => `<th>${g.nombre}</th>`).join('')}</tr>
         <tr><td>Zona</td>${items.map(g => `<td>${g.zona}</td>`).join('')}</tr>
         <tr><td>Precio</td>${items.map(g => `<td>Bs. ${g.precio}</td>`).join('')}</tr>
+        <tr><td>Promo</td>${items.map(g => `<td>${g.promo || 'N/A'}</td>`).join('')}</tr>
     </table>`;
 }
 
