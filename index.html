@@ -85,6 +85,28 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 @media(max-width:720px){#formScreen .f-grid{grid-template-columns:1fr}#formScreen .f-full{grid-column:auto}#formScreen .f-checks{grid-template-columns:1fr}#formScreen .f-card{padding:22px}}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.links{display:none}.test{grid-template-columns:1fr}}
 @media(max-width:580px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.search{flex-direction:column}.stats{grid-template-columns:1fr}}
+
+/* Estilos añadidos solo al test de ejercicios */
+.exercise-intro{margin:12px 0 18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#f0fdf4,#eff6ff);border:1px solid #dbeafe;color:#334155}
+.exercise-plan{margin-top:18px;display:grid;gap:16px}
+.plan-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.plan-stat{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--surface,#fff)}
+.plan-stat strong{display:block;font-size:19px;color:var(--text)}.plan-stat span{font-size:12px;color:var(--muted)}
+.exercise-card{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:18px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface,#fff);overflow:hidden}
+.exercise-art{width:100%;min-height:150px;border-radius:12px;overflow:hidden;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
+.exercise-art svg{width:100%;height:auto;display:block;max-height:210px}
+.exercise-details h4{font-size:18px;margin:0 0 8px}.exercise-tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+.exercise-tag{font-size:11px;border-radius:99px;padding:5px 9px;background:#eff6ff;color:#1d4ed8;font-weight:700}
+.exercise-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.exercise-meta div{background:#f8fafc;border-radius:10px;padding:9px}.exercise-meta b{display:block;font-size:13px}.exercise-meta span{font-size:11px;color:#64748b}
+.exercise-step{margin:8px 0;padding-left:20px}.exercise-step li{margin:5px 0;line-height:1.45}
+.plan-section{padding:16px;border:1px solid var(--line);border-radius:14px}.plan-section h4{margin:0 0 8px}.plan-section p{margin:5px 0;line-height:1.5}
+.circuit-row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.circuit-row:last-child{border-bottom:0}
+.circuit-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#dcfce7;color:#166534;font-weight:800}
+.circuit-row small{display:block;color:var(--muted);margin-top:3px}.rest-pill{font-size:12px;background:#fff7ed;color:#9a3412;border-radius:99px;padding:5px 8px;white-space:nowrap}
+.exercise-warning{font-size:13px;line-height:1.5;color:#475569;background:#fff7ed;border:1px solid #fed7aa;padding:13px;border-radius:12px}
+@media(max-width:650px){.exercise-card{grid-template-columns:1fr}.exercise-art{min-height:180px}.plan-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.exercise-meta{grid-template-columns:repeat(3,minmax(0,1fr))}.circuit-row{grid-template-columns:30px 1fr}.rest-pill{grid-column:2;justify-self:start}}
+
 </style>
 </head>
 <body>
@@ -176,12 +198,22 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-s
 
 <section id="comparar"><div class="container"><div class="head"><div><h2>Comparar gimnasios</h2><p>Selecciona hasta 3 opciones.</p></div><button class="btn ghost" onclick="compare=[];render()">Limpiar</button></div><div class="compare" id="compare"></div></div></section>
 
-<section id="test"><div class="container"><div class="head"><div><h2>Test recomendador</h2><p>Te mostramos cómo presupuesto y zona influyen en el resultado.</p></div></div>
+<section id="test"><div class="container"><div class="head"><div><h2>Test recomendador</h2><p>Encuentra un gimnasio o descubre ejercicios según tu objetivo. El resto de GymClick se mantiene igual.</p></div></div>
 <div class="test"><div class="box">
-<div class="q"><b>1. ¿Cuál es tu presupuesto mensual?</b><label class="option"><input type="radio" name="budget" value="100"> Hasta Bs. 100</label><label class="option"><input type="radio" name="budget" value="150"> Hasta Bs. 150</label><label class="option"><input type="radio" name="budget" value="200"> Hasta Bs. 200</label><label class="option"><input type="radio" name="budget" value="999999"> Más de Bs. 200</label></div>
-<div class="q"><b>2. ¿Qué zona te conviene?</b><select class="field" id="tzone"><option value="">Cualquiera</option><option>Centro</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
-<button class="btn primary" onclick="recommend()">Ver recomendación</button></div>
-<div class="box" id="rec"><h3>Tu resultado aparecerá aquí</h3><p class="muted">Cada coincidencia suma puntos. El presupuesto pesa 2 puntos y la zona 3.</p></div></div></div></section>
+<div class="q"><b>1. ¿Qué quieres recomendar?</b><label class="option"><input type="radio" name="testMode" value="gym" checked onchange="switchTestMode()"> Encontrar un gimnasio</label><label class="option"><input type="radio" name="testMode" value="exercise" onchange="switchTestMode()"> Encontrar ejercicios para entrenar</label></div>
+<div id="gymTestFields">
+<div class="q"><b>2. ¿Cuál es tu presupuesto mensual?</b><label class="option"><input type="radio" name="budget" value="100"> Hasta Bs. 100</label><label class="option"><input type="radio" name="budget" value="150"> Hasta Bs. 150</label><label class="option"><input type="radio" name="budget" value="200"> Hasta Bs. 200</label><label class="option"><input type="radio" name="budget" value="999999"> Más de Bs. 200</label></div>
+<div class="q"><b>3. ¿Qué zona te conviene?</b><select class="field" id="tzone"><option value="">Cualquiera</option><option>Centro</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
+<button class="btn primary" onclick="recommend()">Ver gimnasio recomendado</button>
+</div>
+<div id="exerciseTestFields" style="display:none">
+<div class="q"><b>2. ¿Cuál es tu objetivo?</b><select class="field" id="exerciseGoal"><option value="all">Cualquiera</option><option value="muscle">Ganar músculo / fuerza</option><option value="cardio">Cardio / bajar de peso</option><option value="mobility">Movilidad / estiramiento</option></select></div>
+<div class="q"><b>3. ¿Qué equipo tienes?</b><select class="field" id="exerciseEquipment"><option value="all">Cualquiera</option><option value="bodyweight">Sin equipo (peso corporal)</option><option value="dumbbell">Mancuernas</option><option value="barbell">Barra y discos</option><option value="machine">Máquinas de gimnasio</option></select></div>
+<div class="q"><b>4. ¿Cuál es tu nivel?</b><select class="field" id="exerciseLevel"><option value="all">Todos los niveles</option><option value="Principiante">Principiante</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
+<button class="btn primary" onclick="recommendExercises()">Ver ejercicios recomendados</button>
+<p class="muted" style="margin-top:12px">El test genera una guía visual con técnica paso a paso, series, repeticiones, pausas y un circuito completo. Las ilustraciones son esquemáticas; ajusta el plan a tu experiencia.</p>
+</div></div>
+<div class="box" id="rec"><h3>Tu resultado aparecerá aquí</h3><p class="muted">Elige una opción y responde las preguntas para recibir una recomendación.</p></div></div></div></section>
 </main>
 <footer id="privacidad"><div class="container">© 2026 GymClick Santa Cruz · Plataforma académica.</div></footer>
 </div>
@@ -477,6 +509,71 @@ function clearFilters() {
     document.getElementById('min').value = '';
     document.getElementById('max').value = '';
     render();
+}
+
+function switchTestMode() {
+    const mode = document.querySelector('input[name="testMode"]:checked')?.value || 'gym';
+    document.getElementById('gymTestFields').style.display = mode === 'gym' ? 'block' : 'none';
+    document.getElementById('exerciseTestFields').style.display = mode === 'exercise' ? 'block' : 'none';
+    document.getElementById('rec').innerHTML = mode === 'gym'
+        ? '<h3>Tu resultado aparecerá aquí</h3><p class="muted">El presupuesto y la zona ayudan a ordenar las opciones.</p>'
+        : '<h3>Tus ejercicios aparecerán aquí</h3><p class="muted">Selecciona objetivo, equipo y nivel.</p>';
+}
+
+// Biblioteca de demostración con fotografías de referencia para el test. Los datos se pueden ampliar luego con Free Exercise DB.
+const exerciseDemo = [
+ {id:'squat',name:'Sentadilla con peso corporal',muscles:'Cuádriceps, glúteos y abdomen',goal:'muscle',equipment:'bodyweight',level:'Principiante',instructions:'Separa los pies aproximadamente al ancho de hombros. Lleva la cadera atrás y abajo, mantén el pecho abierto y las rodillas siguiendo la dirección de los pies.',steps:['Coloca los pies firmes y activa suavemente el abdomen.','Flexiona caderas y rodillas hasta un rango cómodo.','Empuja el suelo para volver a estar de pie, sin bloquear bruscamente las rodillas.'],sets:3,reps:'10–12 repeticiones',rest:60,tempo:'2 s bajar · 1 s subir',type:'legs'},
+ {id:'pushup',name:'Flexiones inclinadas o en el suelo',muscles:'Pecho, tríceps, hombros y core',goal:'muscle',equipment:'bodyweight',level:'Principiante',instructions:'Mantén cabeza, espalda y cadera alineadas. Baja el pecho de forma controlada y empuja sin encoger los hombros.',steps:['Apoya las manos un poco más abiertas que los hombros.','Baja controlando los codos en diagonal, sin hundir la cintura.','Empuja hasta extender los brazos cómodamente. Para facilitarlo, apoya las manos en una mesa firme o pared.'],sets:3,reps:'6–12 repeticiones',rest:60,tempo:'2 s bajar · 1 s subir',type:'push'},
+ {id:'row',name:'Remo con mancuerna',muscles:'Espalda alta, dorsal y bíceps',goal:'muscle',equipment:'dumbbell',level:'Intermedio',instructions:'Inclina el torso con la espalda neutra y lleva la mancuerna hacia la cadera. Evita girar el tronco o tirar con impulso.',steps:['Apoya una mano en un banco estable y coloca los pies firmes.','Lleva el codo hacia atrás cerca del cuerpo.','Baja la mancuerna lentamente hasta extender el brazo sin perder postura.'],sets:3,reps:'8–12 por lado',rest:60,tempo:'2 s subir · 2 s bajar',type:'pull'},
+ {id:'bench',name:'Press de banca con barra',muscles:'Pectoral, tríceps y deltoides anterior',goal:'muscle',equipment:'barbell',level:'Intermedio',instructions:'Usa una carga que puedas controlar y, si entrenas con barra, pide supervisión o utiliza soportes de seguridad.',steps:['Apoya los pies en el suelo y conserva los glúteos en el banco.','Baja la barra hacia la zona media del pecho sin rebotar.','Empuja verticalmente manteniendo muñecas alineadas con los antebrazos.'],sets:3,reps:'8–10 repeticiones',rest:90,tempo:'2 s bajar · 1 s subir',type:'barbell'},
+ {id:'pressleg',name:'Prensa de piernas',muscles:'Cuádriceps y glúteos',goal:'muscle',equipment:'machine',level:'Principiante',instructions:'Ajusta el asiento para mantener la espalda apoyada. Usa un recorrido cómodo y no bloquees las rodillas al extender.',steps:['Coloca los pies a la anchura de los hombros en la plataforma.','Desciende lentamente sin que la pelvis se despegue del respaldo.','Empuja con todo el pie y detente antes de bloquear las rodillas.'],sets:3,reps:'10–12 repeticiones',rest:75,tempo:'2 s bajar · 1 s subir',type:'machine'},
+ {id:'jumping',name:'Saltos de tijera (jumping jacks)',muscles:'Piernas, hombros y sistema cardiovascular',goal:'cardio',equipment:'bodyweight',level:'Principiante',instructions:'Salta abriendo piernas y brazos a un ritmo que te permita mantener el control. Si necesitas bajo impacto, alterna un pie hacia fuera cada vez.',steps:['Comienza de pie con los pies juntos y brazos a los lados.','Abre piernas mientras elevas los brazos sin forzar hombros.','Regresa suavemente y repite con ritmo constante.'],sets:3,reps:'30 segundos',rest:30,tempo:'Ritmo continuo',type:'cardio'},
+ {id:'march',name:'Marcha rápida en el sitio',muscles:'Piernas y sistema cardiovascular',goal:'cardio',equipment:'bodyweight',level:'Principiante',instructions:'Mantén una postura erguida, pisa con suavidad y aumenta el ritmo poco a poco. Debes poder hablar en frases cortas.',steps:['Marcha levantando las rodillas de forma cómoda.','Acompaña el movimiento con los brazos.','Mantén el ritmo y respira de manera regular.'],sets:3,reps:'45 segundos',rest:30,tempo:'Ritmo moderado',type:'cardio'},
+ {id:'burpee',name:'Burpee adaptado',muscles:'Cuerpo completo y sistema cardiovascular',goal:'cardio',equipment:'bodyweight',level:'Avanzado',instructions:'Es un movimiento exigente. Hazlo sin salto y llevando los pies atrás de uno en uno si necesitas reducir el impacto.',steps:['Desde de pie, flexiona cadera y apoya las manos en el suelo.','Lleva los pies atrás hasta una plancha estable; no dejes caer la cintura.','Acerca los pies y ponte de pie con control. El salto es opcional.'],sets:3,reps:'6–8 repeticiones',rest:75,tempo:'Controlado',type:'cardio'},
+ {id:'walk',name:'Caminata en cinta',muscles:'Piernas y sistema cardiovascular',goal:'cardio',equipment:'machine',level:'Principiante',instructions:'Empieza con una velocidad cómoda, aumenta gradualmente y no te sujetes de las barras salvo que necesites equilibrio.',steps:['Camina suave durante 2–3 minutos para entrar en calor.','Mantén zancada natural y mirada al frente.','Termina reduciendo la velocidad gradualmente.'],sets:1,reps:'10–20 minutos',rest:0,tempo:'Intensidad moderada',type:'machine'},
+ {id:'hamstring',name:'Estiramiento de isquiotibiales',muscles:'Parte posterior de los muslos',goal:'mobility',equipment:'bodyweight',level:'Principiante',instructions:'Busca una tensión suave, nunca dolor, y no rebotes. Respira con normalidad.',steps:['Coloca un talón delante con la rodilla ligeramente flexionada.','Inclina la cadera hacia delante manteniendo la espalda larga.','Sostén la posición y cambia de lado.'],sets:2,reps:'20–30 segundos por lado',rest:15,tempo:'Estático y suave',type:'stretch'},
+ {id:'shoulder',name:'Círculos de movilidad de hombros',muscles:'Hombros y espalda alta',goal:'mobility',equipment:'bodyweight',level:'Principiante',instructions:'Haz círculos lentos dentro de un rango cómodo. Reduce la amplitud si aparece molestia.',steps:['Ponte de pie con el pecho relajado y brazos a los lados.','Haz círculos pequeños hacia delante y luego hacia atrás.','Aumenta la amplitud solo si se siente cómodo.'],sets:2,reps:'8–10 círculos por dirección',rest:15,tempo:'Lento y controlado',type:'stretch'},
+ {id:'deadlift',name:'Peso muerto con barra',muscles:'Glúteos, isquiotibiales y espalda',goal:'muscle',equipment:'barbell',level:'Avanzado',instructions:'Prioriza aprender la bisagra de cadera con poco peso y supervisión. Mantén la barra cerca del cuerpo y la columna neutra.',steps:['Coloca los pies bajo la barra y sujeta con firmeza.','Lleva la cadera atrás, activa el abdomen y mantén la espalda neutra.','Empuja el suelo para levantarte; baja invirtiendo el movimiento.'],sets:3,reps:'5–8 repeticiones',rest:120,tempo:'Controlado',type:'barbell'},
+ {id:'curl',name:'Curl de bíceps con mancuernas',muscles:'Bíceps y antebrazos',goal:'muscle',equipment:'dumbbell',level:'Principiante',instructions:'Mantén los codos cerca del torso y evita balancearte para levantar el peso.',steps:['Sujeta las mancuernas con las palmas hacia delante.','Flexiona los codos sin mover los hombros.','Baja despacio hasta casi extender los brazos.'],sets:3,reps:'10–12 repeticiones',rest:45,tempo:'2 s subir · 2 s bajar',type:'dumbbell'}
+];
+
+// Fotografías reales de entrenamiento (Unsplash). Se mantienen como imágenes externas para no alterar el resto de la web.
+const exercisePhotos = {
+ squat:'https://images.unsplash.com/photo-1566241142559-40e1dac266c6?auto=format&fit=crop&w=900&q=85',
+ pushup:'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?auto=format&fit=crop&w=900&q=85',
+ row:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=85',
+ bench:'https://images.unsplash.com/photo-1534368270820-9de3d8053204?auto=format&fit=crop&w=900&q=85',
+ pressleg:'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=900&q=85',
+ jumping:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=85',
+ march:'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=900&q=85',
+ burpee:'https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=85',
+ walk:'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=900&q=85',
+ hamstring:'https://images.unsplash.com/photo-1562088287-bde35a1ea917?auto=format&fit=crop&w=900&q=85',
+ shoulder:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=85',
+ deadlift:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=85',
+ curl:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=85'
+};
+function exerciseArt(e) {
+ const src=exercisePhotos[e.id] || exercisePhotos.squat;
+ return `<img src="${src}" alt="Fotografía de referencia para ${esc(e.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85'">`;
+}
+function goalLabel(g){return g==='muscle'?'Fuerza / músculo':g==='cardio'?'Cardio':g==='mobility'?'Movilidad':'General';}
+function equipmentLabel(e){return ({bodyweight:'Peso corporal',dumbbell:'Mancuernas',barbell:'Barra',machine:'Máquina'})[e]||e;}
+function exerciseCard(e,i){return `<article class="exercise-card"><div class="exercise-art">${exerciseArt(e)}</div><div class="exercise-details"><h4>${i+1}. ${esc(e.name)}</h4><div class="exercise-tags"><span class="exercise-tag">${esc(goalLabel(e.goal))}</span><span class="exercise-tag">${esc(e.level)}</span><span class="exercise-tag">${esc(equipmentLabel(e.equipment))}</span></div><p><b>Músculos trabajados:</b> ${esc(e.muscles)}</p><p>${esc(e.instructions)}</p><div class="exercise-meta"><div><b>${esc(e.sets)} ${e.sets===1?'serie':'series'}</b><span>Volumen</span></div><div><b>${esc(e.reps)}</b><span>Repeticiones / tiempo</span></div><div><b>${e.rest?e.rest+' s':'Sin pausa fija'}</b><span>Descanso entre series</span></div></div><details><summary><b>Ver técnica paso a paso</b></summary><ol class="exercise-step">${e.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p class="muted"><b>Ritmo:</b> ${esc(e.tempo)}</p></details></div></article>`;}
+function recommendExercises() {
+ const goal=document.getElementById('exerciseGoal').value;
+ const equipment=document.getElementById('exerciseEquipment').value;
+ const level=document.getElementById('exerciseLevel').value;
+ const results=exerciseDemo.filter(e=>(goal==='all'||e.goal===goal)&&(equipment==='all'||e.equipment===equipment)&&(level==='all'||e.level===level));
+ const recDiv=document.getElementById('rec');
+ if(!results.length){recDiv.innerHTML='<h3>No encontramos coincidencias</h3><p class="muted">Prueba con otro equipo, objetivo o nivel. Por ejemplo, elige “Cualquiera” en equipo.</p>';return;}
+ const isMobility=goal==='mobility';
+ const isCardio=goal==='cardio';
+ const chosen=results.slice(0, isMobility?4:5);
+ const rounds=level==='Avanzado'?4:level==='Intermedio'?3:2;
+ const workRest=isCardio?'30–45 s de trabajo':isMobility?'20–30 s por estiramiento':'las repeticiones indicadas';
+ const total=Math.round((chosen.length*(isCardio?1.25:isMobility?.75:1.5)*rounds)+8);
+ recDiv.innerHTML=`<h3>Tu plan de entrenamiento ilustrado</h3><p class="muted">${chosen.length} ejercicios seleccionados según tus filtros. Es una propuesta general para adaptar a tu condición física, no una prescripción médica.</p><div class="exercise-intro"><b>Cómo hacer la sesión:</b> empieza con el calentamiento, sigue el circuito en el orden indicado y termina con vuelta a la calma. Prioriza una técnica limpia antes de aumentar peso o velocidad.</div><div class="plan-summary"><div class="plan-stat"><strong>${chosen.length}</strong><span>Ejercicios del circuito</span></div><div class="plan-stat"><strong>${rounds}</strong><span>Vueltas sugeridas</span></div><div class="plan-stat"><strong>${total} min</strong><span>Duración estimada</span></div><div class="plan-stat"><strong>${esc(level==='all'?'Adaptable':level)}</strong><span>Nivel elegido</span></div></div><div class="plan-section"><h4>1. Calentamiento · 5–8 minutos</h4><p>Camina en el sitio o a paso ligero 2–3 min, haz círculos de hombros, movilidad de cadera y tobillos y 8 sentadillas suaves sin peso. El objetivo es elevar poco a poco la temperatura, no agotarte.</p></div><div class="plan-section"><h4>2. Circuito completo · orden y descansos</h4><p class="muted">Completa cada ejercicio y descansa antes de pasar al siguiente. Al terminar una vuelta, descansa 1–2 minutos y repite.</p>${chosen.map((e,i)=>`<div class="circuit-row"><span class="circuit-num">${i+1}</span><div><b>${esc(e.name)}</b><small>${esc(e.reps)} · ${e.sets} serie(s) por ejercicio</small></div><span class="rest-pill">Pausa ${e.rest||15} s</span></div>`).join('')}<p><b>Entre vueltas:</b> 60–120 segundos, o hasta recuperar la respiración y poder hablar con comodidad.</p></div><div class="exercise-plan">${chosen.map((e,i)=>exerciseCard(e,i)).join('')}</div><div class="plan-section"><h4>3. Vuelta a la calma · 4–6 minutos</h4><p>Camina suave 2 minutos y realiza estiramientos cómodos de los músculos usados durante 20–30 segundos por lado, sin rebotes ni dolor. Respira normalmente.</p></div><div class="exercise-warning"><b>Seguridad y progresión:</b> si eres principiante, comienza con 1–2 vueltas y una carga ligera. Cuando completes todas las repeticiones con buena técnica en dos sesiones, aumenta solo un poco la dificultad. Detente si sientes dolor agudo, mareo, falta de aire inusual o malestar. En ejercicios con barra, utiliza soportes y supervisión. Los descansos son orientativos: alarga la pausa si no te has recuperado.</div>`;
 }
 
 function recommend() {
