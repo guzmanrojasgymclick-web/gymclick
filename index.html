@@ -184,6 +184,19 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
 }
 @media(max-width:580px){.filters{grid-template-columns:1fr}.gym{flex-basis:78%}.form-side-btn{padding:11px 13px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* Botón y ventana de ayuda */
+.help-btn{position:fixed;right:16px;bottom:72px;z-index:70;border:1px solid #ffffff30;border-radius:14px;padding:12px 16px;font-weight:900;background:#11161a;color:#c7ff32;box-shadow:0 10px 30px #0009}
+.help-btn:hover{background:#c7ff32;color:#071006}
+#helpModal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:#000c;padding:16px}
+#helpModal.open{display:flex}
+.help-card{position:relative;width:min(640px,100%);max-height:90vh;overflow:auto;background:linear-gradient(160deg,#111713,#050806);border:1px solid #7ee52b66;border-radius:18px;padding:26px;color:#f4f7f2;box-shadow:0 20px 60px #000a}
+.help-card h2{margin:0 0 6px;color:#9cff35;font-size:clamp(22px,4vw,30px)}
+.help-card h3{margin:18px 0 6px;color:#d7ffb3;font-size:16px}
+.help-card p,.help-card li{font-size:14px;line-height:1.65;color:#d1dbce}
+.help-card ul{margin:0;padding-left:20px}
+.help-close{position:absolute;top:12px;right:12px;width:36px;height:36px;border:0;border-radius:50%;font-size:22px;font-weight:800;background:#263126;color:#baff7a}
+.help-manual{display:inline-block;margin-top:16px}
+@media(max-width:580px){.help-btn{padding:11px 13px;font-size:13px;bottom:66px}}
 </style>
 </head>
 <body>
@@ -224,6 +237,42 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
 </div>
 
 <button class="form-side-btn" type="button" onclick="showForm()">📝 REGÍSTRATE</button>
+
+<button class="help-btn" type="button" onclick="openHelp()" aria-label="Abrir ayuda">❓ AYUDA</button>
+
+<div id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" onclick="if(event.target===this)closeHelp()">
+  <div class="help-card">
+    <button class="help-close" type="button" onclick="closeHelp()" aria-label="Cerrar ayuda">×</button>
+    <h2 id="helpTitle">¿Cómo usar GymClick?</h2>
+    <p>Guía rápida para encontrar y comparar gimnasios en Santa Cruz de la Sierra.</p>
+
+    <h3>🏠 Inicio</h3>
+    <p>Escribe el nombre de un gimnasio o una zona y presiona «Buscar gimnasios».</p>
+
+    <h3>🔎 Explorar</h3>
+    <ul>
+      <li>Filtra por nombre, zona y precio mínimo o máximo.</li>
+      <li>Desliza el carrusel para ver más gimnasios.</li>
+      <li>En cada tarjeta puedes abrir el mapa, las redes, escribir por WhatsApp o agregar el gimnasio a Comparar.</li>
+    </ul>
+
+    <h3>⚖️ Comparar</h3>
+    <p>Elige hasta 3 gimnasios en Explorar y revisa sus diferencias en una tabla.</p>
+
+    <h3>🎯 Test</h3>
+    <p>Elige un modo (armar tu equipo, encontrar un gimnasio o recibir una rutina), responde las preguntas y presiona el botón de resultado. Puedes enviarte el resultado por WhatsApp.</p>
+
+    <h3>📝 Registro</h3>
+    <ul>
+      <li>Presiona «REGÍSTRATE» (abajo a la derecha).</li>
+      <li>Completa nombre completo y correo electrónico, y acepta los términos.</li>
+      <li>Los demás campos son opcionales.</li>
+      <li>Presiona «Enviar registro» y espera el mensaje verde de confirmación. Revisa tu correo (y la carpeta de spam).</li>
+    </ul>
+
+    <a id="helpManual" class="btn primary help-manual" href="#" target="_blank" rel="noopener" style="display:none">📄 Abrir el manual de usuario</a>
+  </div>
+</div>
 
 <header class="top"><div class="container nav">
   <a class="logo" href="#inicio" onclick="show('inicio');return false">GYM<span>CLICK</span> <b>SCZ</b></a>
@@ -768,6 +817,19 @@ function recommendExercises() {
         '\n\n⚠️ Calienta 5-8 min y estira al final. Detente si sientes dolor.\n🔥 ¡A entrenar! 💚\n' + FRANJA;
     document.getElementById('rec').insertAdjacentHTML('beforeend', '<div class="plan-section">' + bloqueWA() + '</div>');
 }
+
+/* ---------- Ayuda ---------- */
+// Pega aquí el enlace de tu manual en PDF (por ejemplo, de Google Drive o de GitHub).
+// Si lo dejas vacío, el botón del manual no se muestra.
+const URL_MANUAL = '';
+
+(function () {
+    const link = document.getElementById('helpManual');
+    if (URL_MANUAL) { link.href = URL_MANUAL; link.style.display = 'inline-block'; }
+})();
+function openHelp() { document.getElementById('helpModal').classList.add('open'); }
+function closeHelp() { document.getElementById('helpModal').classList.remove('open'); }
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeHelp(); });
 
 /* ---------- Inicio ---------- */
 show((location.hash || '#inicio').slice(1));
